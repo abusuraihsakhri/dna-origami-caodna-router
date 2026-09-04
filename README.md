@@ -67,26 +67,53 @@ python cli.py --task-id <value> --target <value> --primary <value> --secondary <
 
 ## 🛡️ Security & Enterprise Architecture
 
-* **Zero-PHI Outbound Interceptor:** Active AST and regex inspection blocking SSNs, MRNs, phone numbers, and patient identifiers.
-* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition.
+* **Zero-PHI Outbound Interceptor:** Active regex inspection blocking SSNs, MRNs, phone numbers, and patient identifiers.
+* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition. Requires `AUDIT_SECRET_KEY` environment variable (minimum 32 characters).
 * **Air-Gapped LLM Reasoning Adapter:** Agnostic integration for local Ollama instances (`llama3`, `mistral`), Claude 3.5 Sonnet, GPT-4o, and deterministic test mocks.
 * **Active Learning Bayesian Calibration:** Dynamic tracker updating worker reliability weights and monitoring Brier calibration drift.
 * **FastAPI & Prometheus Telemetry:** Exposes OpenAPI 3.1 REST endpoints and operational Prometheus metrics (`/metrics`).
+* **Input Validation:** All metric values validated for finiteness; string fields validated for non-emptiness.
+
+---
+
+## ⚙️ Configuration
+
+### Required Environment Variables
+
+| Variable | Description | Required |
+|:---------|:------------|:---------|
+| `AUDIT_SECRET_KEY` | HMAC-SHA256 audit signing key (min 32 chars) | Yes |
+
+### Optional Environment Variables
+
+| Variable | Description | Default |
+|:---------|:------------|:--------|
+| `AUDIT_SECRET_KEY` | Audit signing key | None (required) |
 
 ---
 
 ## 🧪 Testing & Verification
 
-Run the automated test suite:
+### Install Dependencies
 
 ```bash
+pip install -e ".[dev]"
+```
+
+### Run Tests
+
+```bash
+# Set required environment variable
+export AUDIT_SECRET_KEY="your-32-character-minimum-secret-key-here"
+
+# Run full test suite
 pytest -v
 ```
 
-Execute high-throughput batch simulation benchmarks:
+### Run Simulation
 
 ```bash
-python simulator.py --tasks 1000 --concurrency 8
+python simulator.py 100
 ```
 
 ---
@@ -95,5 +122,5 @@ python simulator.py --tasks 1000 --concurrency 8
 
 ```bash
 docker build -t dna-origami-caodna-router .
-docker run -p 8000:8000 dna-origami-caodna-router
+docker run -e AUDIT_SECRET_KEY="your-32-character-minimum-secret-key" -p 8000:8000 dna-origami-caodna-router
 ```

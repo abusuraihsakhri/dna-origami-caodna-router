@@ -1,7 +1,6 @@
 """
 Prometheus Operational Metrics Exporter for dna-origami-caodna-router.
 """
-import time
 from typing import Dict, Any
 
 class SystemMetricsCollector:
