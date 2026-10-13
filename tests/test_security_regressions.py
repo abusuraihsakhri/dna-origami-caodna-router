@@ -90,9 +90,9 @@ def test_batch_skips_identifier_patterns_and_avoids_duplicate_headers(tmp_path):
     source = tmp_path / "records.csv"
     output = tmp_path / "results.csv"
     source.write_text(
-        "task_id,target_identifier,primary_metric,secondary_metric,status_descriptor,overall_urgency\\n"
-        "T-1,MRN-123456,2,1,NOMINAL,\\n"
-        "T-2,SYNTHETIC,2,1,NOMINAL,\\n", encoding="utf-8"
+        "task_id,target_identifier,primary_metric,secondary_metric,status_descriptor,overall_urgency\n"
+        "T-1,MRN-123456,2,1,NOMINAL,\n"
+        "T-2,SYNTHETIC,2,1,NOMINAL,\n", encoding="utf-8"
     )
     assert main(["batch", "-i", str(source), "-o", str(output)]) == 0
     with output.open(newline="", encoding="utf-8") as fh:
