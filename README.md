@@ -1,126 +1,67 @@
 # DNA Origami CAODNA Router
 
-> **Domain:** Computational Biology & AI Drug Discovery  
-> **Reference Guidelines & Standards:** `wwPDB, IUPAC & CLSI Computational Guidelines`
+A rule-based Python audit and telemetry demonstrator with a browser preview, command-line interfaces and an optional FastAPI service. It evaluates illustrative numeric thresholds and status keywords; it is **not** a caDNAno scaffold-routing engine.
 
-<div align="center">
+**Scientific scope:** The current code does not generate scaffold paths, crossover arrangements, staple DNA sequences, melting-temperature predictions or experimentally validated DNA-origami designs. Thresholds are demonstration settings, not caDNAno, IUPAC or clinical reference limits. The enrichment modules likewise provide generic threshold assessments rather than molecular simulation.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB.svg?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688.svg?logo=fastapi&logoColor=white)
-![Audit Trail](https://img.shields.io/badge/Audit-HMAC--SHA256_Tamper--Evident-brightgreen.svg)
-![Zero-PHI Guard](https://img.shields.io/badge/Guard-Zero--PHI_Outbound-blue.svg)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)
+## Browser preview
 
-</div>
+Open [web/index.html](web/index.html) in a browser, or serve the Python API locally and visit `http://127.0.0.1:8000/`. The **Browser preview** mode runs entirely on-device and uses the legacy worker rules (primary threshold 25; secondary threshold 12; configured anomaly keywords and critical flag). Results can be exported as JSON. The preview does not create an audit log or cryptographic signature, and it does not transmit values.
 
----
+Select **Server audit** only when the FastAPI application is running. Server mode sends inputs to `/api/audit` and returns the actual Python dossier including an HMAC audit-chain hash. Do not use real patient identifiers.
 
-## 📖 What It Does
+## Python setup
 
-Dna Origami Caodna Router
-
----
-
-## ⚙️ Key Capabilities & Algorithmic Modules
-
-- **Deterministic Calculation Engine**: Strict compliance with standard reference formulations and thresholds.
-- **Risk & Urgency Classification**: Multi-tier categorization with automated clinical/operational action recommendations.
-- **Validation & Guardrails**: Rigorous input bounds checking and anomaly detection.
-
----
-
-## 💻 CLI Quickstart & Usage
-
-### 1. Guided Interactive Mode
-```bash
-python cli.py
-```
-
-### 2. Direct Parameterized Evaluation
-```bash
-python cli.py --task-id <value> --target <value> --primary <value> --secondary <value>
-```
-
-### Parameter Reference
-- `--task-id`: Specifies input measurement or parameter value.
-- `--target`: Specifies input measurement or parameter value.
-- `--primary`: Specifies input measurement or parameter value.
-- `--secondary`: Specifies input measurement or parameter value.
-- `--critical`: Specifies input measurement or parameter value.
-- `--status`: Specifies input measurement or parameter value.
-- `--input`: Specifies input measurement or parameter value.
-- `--output`: Specifies input measurement or parameter value.
-
-### Input Data Schema
-
-| Field | Description | Requirement |
-|:------|:------------|:------------|
-| `task_id` | Parameter / observation metric | Required |
-| `target_identifier` | Parameter / observation metric | Required |
-| `primary_metric` | Parameter / observation metric | Required |
-| `secondary_metric` | Parameter / observation metric | Required |
-| `is_critical_flag` | Parameter / observation metric | Required |
-| `status_descriptor` | Parameter / observation metric | Required |
-
----
-
-## 🛡️ Security & Enterprise Architecture
-
-* **Zero-PHI Outbound Interceptor:** Active regex inspection blocking SSNs, MRNs, phone numbers, and patient identifiers.
-* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition. Requires `AUDIT_SECRET_KEY` environment variable (minimum 32 characters).
-* **Air-Gapped LLM Reasoning Adapter:** Agnostic integration for local Ollama instances (`llama3`, `mistral`), Claude 3.5 Sonnet, GPT-4o, and deterministic test mocks.
-* **Active Learning Bayesian Calibration:** Dynamic tracker updating worker reliability weights and monitoring Brier calibration drift.
-* **FastAPI & Prometheus Telemetry:** Exposes OpenAPI 3.1 REST endpoints and operational Prometheus metrics (`/metrics`).
-* **Input Validation:** All metric values validated for finiteness; string fields validated for non-emptiness.
-
----
-
-## ⚙️ Configuration
-
-### Required Environment Variables
-
-| Variable | Description | Required |
-|:---------|:------------|:---------|
-| `AUDIT_SECRET_KEY` | HMAC-SHA256 audit signing key (min 32 chars) | Yes |
-
-### Optional Environment Variables
-
-| Variable | Description | Default |
-|:---------|:------------|:--------|
-| `AUDIT_SECRET_KEY` | Audit signing key | None (required) |
-
----
-
-## 🧪 Testing & Verification
-
-### Install Dependencies
+Python 3.10 or later:
 
 ```bash
-pip install -e ".[dev]"
+python -m pip install -e ".[api,dev]"
+export AUDIT_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')"
+python -m pytest -q
+python cli.py audit --task-id T-1 --target SYNTHETIC-01 --primary 29.4 --secondary 14.8
+python cli.py serve --host 127.0.0.1 --port 8000
 ```
 
-### Run Tests
+The packaged entry point `dna-origami-caodna-router` invokes the separate `dna_origami_router.cli` compatibility interface, which has a different illustrative secondary threshold (10) and no HMAC logging. The root `cli.py` and Docker service use `agents/` with secondary threshold 12. These implementations are retained for compatibility and should not be mistaken for a single validated scientific model.
+
+### Root CLI commands
+
+- `python cli.py audit --task-id T-1 --target SYNTHETIC-01 --primary 26 --secondary 13 --status NOMINAL`
+- `python cli.py batch -i sample.csv -o results.csv`
+- `python cli.py chat "status"` — deterministic mock response only
+- `python cli.py verify-audit` — checks the current **in-memory** audit chain (not past processes)
+- `python simulator.py 100` — synthetic throughput demonstration
+
+## REST API
+
+Start with `python cli.py serve`; the API provides `GET /` (web page), `GET /health`, `GET /metrics` (JSON), `POST /api/audit`, `POST /api/chat` (mock), and `GET /api/audit/logs`.
+
+`AUDIT_SECRET_KEY` is required for signed evaluations and must contain at least 32 characters. Never commit a real key. The audit-chain ledger resides in memory and is lost on restart. Access to `/api/audit/logs` is **denied by default**; to enable it, set an independent `AUDIT_LOG_READ_TOKEN` of at least 32 characters and supply `Authorization: Bearer <token>`.
 
 ```bash
-# Set required environment variable
-export AUDIT_SECRET_KEY="your-32-character-minimum-secret-key-here"
-
-# Run full test suite
-pytest -v
+curl -sS -X POST http://127.0.0.1:8000/api/audit \
+  -H 'Content-Type: application/json' \
+  -d '{"task_id":"DEMO-1","target_identifier":"SYNTHETIC","primary_metric":26,"secondary_metric":13}'
 ```
 
-### Run Simulation
+The service uses regex-based identifier screening, which is **not** a complete PHI detection or HIPAA compliance guarantee. Do not expose the unauthenticated evaluation API to the public internet; put authentication, TLS and rate limiting in front of it if deployed.
+
+## Docker
+
+Create `.env` locally from `.env.example`, replace the signing-key placeholder with a unique random secret, then run:
 
 ```bash
-python simulator.py 100
+docker compose up --build
 ```
 
----
+The example Compose configuration binds port 8000 to localhost only. The container runs under a non-root user. Do not commit `.env`.
 
-## 🐳 Container Deployment
+## Tests and technology
 
-```bash
-docker build -t dna-origami-caodna-router .
-docker run -e AUDIT_SECRET_KEY="your-32-character-minimum-secret-key" -p 8000:8000 dna-origami-caodna-router
-```
+`python -m pytest -q` tests the two legacy rule interfaces, enrichment demonstration, audit chain, identifier screening and API behavior. GitHub Actions also builds Python distributions and checks embedded browser JavaScript syntax on Python 3.10, 3.11 and 3.12. The implementation uses Python, Pydantic v2, optional FastAPI/Uvicorn, and plain HTML/CSS/JavaScript; no runtime external LLM provider is implemented.
+
+The browser preview targets modern desktop and mobile browsers with JavaScript enabled. It does not require Python or Pyodide. A GitHub Pages workflow publishes the static preview when Pages is enabled; do not infer deployment success from the presence of the workflow alone.
+
+## License
+
+[MIT](LICENSE).
