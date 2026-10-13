@@ -1,7 +1,7 @@
 """
 Pydantic v2 schemas and data definitions for Dna Origami Caodna Router.
-Domain: AI Drug Discovery, Structural Biology & Wet-Lab Robotics
-Standard: wwPDB / IUPAC / OpenSMILES / ISAC Standards
+Domain: Rule-based, illustrative DNA-origami telemetry
+Standard: Non-validated illustrative thresholds
 """
 import datetime
 import math
@@ -54,7 +54,7 @@ class AgentAlert(BaseModel):
     summary: str
     technical_details: str
     actionable_remediation: str
-    standard_reference: str = "wwPDB / IUPAC / OpenSMILES / ISAC Standards"
+    standard_reference: str = "Illustrative rule thresholds; not a validated caDNAno design standard"
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
     def to_dict(self) -> Dict[str, Any]:
@@ -64,7 +64,7 @@ class AgentAlert(BaseModel):
 class ConsensusDossier(BaseModel):
     dossier_id: str
     system_slug: str = "dna-origami-caodna-router"
-    domain: str = "AI Drug Discovery, Structural Biology & Wet-Lab Robotics"
+    domain: str = "Illustrative DNA-origami-themed telemetry"
     task_id: str
     target_identifier: str
     overall_urgency: UrgencyLevel
