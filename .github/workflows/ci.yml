@@ -48,7 +48,7 @@ jobs:
           print("Audit signature and PHI-pattern checks passed")
           PY
       - name: Verify package build
-        run: python -m build --no-isolation
+        run: python -m build
       - name: Check browser JavaScript syntax
         run: |
           python - <<'PY'
