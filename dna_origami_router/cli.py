@@ -84,7 +84,7 @@ def main(argv=None):
             print(f"Error: Invalid CSV format in '{args.input}': {e}", file=sys.stderr)
             return 1
 
-        out_fields = fieldnames + ["overall_status", "total_alerts", "critical_count", "consensus_summary"]
+        out_fields = fieldnames + [name for name in ("overall_status", "total_alerts", "critical_count", "consensus_summary") if name not in fieldnames]
         out_rows = []
         errors = []
         for idx, r in enumerate(rows):

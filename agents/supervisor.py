@@ -25,6 +25,8 @@ class SystemSupervisor:
         PHIGuard.assert_no_phi(payload.task_id)
         PHIGuard.assert_no_phi(payload.target_identifier)
         PHIGuard.assert_no_phi(payload.status_descriptor)
+        # Validate nested attributes too; individual-field checks are insufficient.
+        PHIGuard.assert_no_phi(payload.model_dump_json())
 
         # Multi-worker evaluations
         all_alerts: List[AgentAlert] = []
@@ -66,7 +68,7 @@ class SystemSupervisor:
             total_alerts=len(all_alerts),
             critical_alerts_count=crit_count,
             alerts=all_alerts,
-            consensus_summary=f"Multi-agent consensus completed with status [{overall_urgency.value}]. Total alerts: {len(all_alerts)}.",
+            consensus_summary=f"Three deterministic rule checks completed with status [{overall_urgency.value}]. Total alerts: {len(all_alerts)}.",
             audit_hash=audit_entry["current_hash"],
         )
 

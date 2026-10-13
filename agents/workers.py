@@ -1,7 +1,7 @@
 """
 Specialized Domain Worker Agents for Dna Origami Caodna Router.
-Domain: AI Drug Discovery, Structural Biology & Wet-Lab Robotics
-Standard: wwPDB / IUPAC / OpenSMILES / ISAC Standards
+Domain: Illustrative rule-based telemetry
+Standard: Illustrative thresholds; not validated caDNAno constraints
 """
 import uuid
 from typing import Dict, Any, List, Optional
@@ -20,7 +20,7 @@ class InvariantQCWorker:
                 origin_worker="InvariantQCWorker",
                 urgency=UrgencyLevel.ELEVATED,
                 summary="Primary Metric Threshold Exceeded",
-                technical_details=f"Primary measurement ({payload.primary_metric:.2f}) exceeds upper reference limit (25.00) under wwPDB / IUPAC / OpenSMILES / ISAC Standards.",
+                technical_details=f"Primary measurement ({payload.primary_metric:.2f}) exceeds upper reference limit (25.00) (illustrative threshold, not a validated DNA-origami limit).",
                 actionable_remediation="Initiate recalibration workflow and review secondary parameters.",
             ))
         return alerts
@@ -57,7 +57,7 @@ class ProtocolConformanceWorker:
                 origin_worker="ProtocolConformanceWorker",
                 urgency=UrgencyLevel.ELEVATED,
                 summary="Protocol Conformance Discordance Detected",
-                technical_details=f"Descriptor '{payload.status_descriptor}' indicates discordance with wwPDB / IUPAC / OpenSMILES / ISAC Standards standards.",
+                technical_details=f"Descriptor '{payload.status_descriptor}' indicates discordance with configured status conventions (not a caDNAno standard).",
                 actionable_remediation="Re-evaluate input specimen or rerun secondary confirmation assay.",
             ))
         return alerts

@@ -1,236 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dna Origami Caodna Router — Operations Console</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #090d16;
-            --card: #111827;
-            --border: #1f293d;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.25);
-            --text: #f3f4f6;
-            --text-muted: #9ca3af;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 2rem;
-            min-height: 100vh;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .header-title h1 { font-size: 1.6rem; font-weight: 700; color: #fff; }
-        .header-title p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem; }
-        .badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--accent-glow);
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 1.5rem;
-        }
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        .card h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
-        input, select, textarea {
-            width: 100%;
-            padding: 0.65rem 0.9rem;
-            background: #0d1322;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: #fff;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent); }
-        .btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 0.7rem 1.4rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-        }
-        .btn:hover { background: #2563eb; }
-        .terminal {
-            background: #060911;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #10b981;
-            height: 380px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-        .metrics-bar {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .metric-box {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-        }
-        .metric-val { font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 0.25rem; }
-        .metric-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DNA Origami Router — Rule-Based Audit Preview</title>
+  <meta name="description" content="Local demonstration of existing rule-based numerical and status checks. Not a caDNAno strand design tool.">
+  <style>
+    :root { color-scheme: dark; --bg:#0a1020; --surface:#141d31; --line:#32415b; --text:#f3f6fc; --muted:#b1bfce; --accent:#71b4ff; --warning:#ffd166; --critical:#ff9292; }
+    * { box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; margin:0; }
+    main { width:min(1100px,calc(100% - 32px)); margin:0 auto; padding:36px 0 54px; }
+    h1 { font-size:clamp(1.6rem,3.3vw,2.35rem); line-height:1.2; margin:0 0 12px; letter-spacing:-.025em; }
+    h2 { font-size:1.15rem; margin:0 0 16px; }
+    p { margin:0 0 14px; }
+    .intro { max-width:860px; color:var(--muted); }
+    .label { color:var(--accent); font-weight:750; text-transform:uppercase; font-size:.78rem; letter-spacing:.1em; }
+    .pill { display:inline-block; border:1px solid var(--line); border-radius:100px; padding:4px 12px; font-size:.78rem; color:var(--muted); margin:2px 0 18px; }
+    .stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:26px 0 22px; }
+    .stat,.panel { background:var(--surface); border:1px solid var(--line); border-radius:12px; }
+    .stat { padding:14px 18px; }
+    .stat strong { display:block; font-size:1.4rem; font-variant-numeric:tabular-nums; }
+    .stat span { display:block; color:var(--muted); font-size:.82rem; }
+    .columns { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:18px; align-items:start; }
+    .panel { padding:22px; min-width:0; }
+    .field { margin-bottom:15px; }
+    label { display:block; font-size:.87rem; color:var(--muted); margin-bottom:6px; }
+    input:not([type="checkbox"]),select { width:100%; min-height:42px; padding:9px 12px; color:var(--text); background:#0b1426; border:1px solid #51617a; border-radius:7px; font:inherit; }
+    input:focus-visible,select:focus-visible,button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+    .check { display:flex; align-items:center; gap:10px; color:var(--text); cursor:pointer; }
+    .check input { inline-size:18px; block-size:18px; accent-color:var(--accent); }
+    button { background:var(--accent); color:#081322; font:inherit; font-weight:750; border:0; border-radius:7px; min-height:43px; padding:10px 18px; cursor:pointer; }
+    button:disabled { opacity:.6; cursor:wait; }
+    button.secondary { background:transparent; color:var(--text); border:1px solid #7486a0; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .hint { font-size:.85rem; color:var(--muted); }
+    .notice { padding:12px 14px; background:#101e33; border-left:3px solid var(--accent); border-radius:4px; color:var(--muted); margin-bottom:17px; }
+    pre { margin:0; padding:16px; background:#080e1b; color:#d4ebff; border-radius:8px; min-height:290px; max-height:560px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; font: .83rem/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .result-head { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .status { color:var(--muted); font-size:.84rem; }
+    .status.warning { color:var(--warning); }
+    .status.critical { color:var(--critical); }
+    footer { color:var(--muted); margin-top:24px; font-size:.84rem; }
+    a { color:var(--accent); }
+    @media(max-width:730px) { main { padding-top:22px; } .columns { grid-template-columns:1fr; } .panel { padding:17px; } .stats { gap:8px; } .stat { padding:12px; } }
+  </style>
 </head>
 <body>
+<main>
+  <div class="label">Scientific software demonstration</div>
+  <h1>DNA Origami Router — Rule-Based Audit</h1>
+  <p class="intro">Explore the repository's existing numeric-threshold and status-descriptor checks. This interface does <strong>not</strong> calculate caDNAno scaffold paths, crossover positions, staple sequences, melting temperatures, or validated biological risk.</p>
+  <div class="pill">Browser preview runs locally · No uploads · No fabricated cryptographic signatures</div>
 
-    <div class="header">
-        <div class="header-title">
-            <h1>Dna Origami Caodna Router</h1>
-            <p>Domain: Clinical & Cryptographic AI | Standard: CAP / CLSI / NIST Standards | LabMind-Atlas Architecture</p>
-        </div>
-        <div>
-            <span class="badge">Air-Gapped Active</span>
-            <span class="badge" style="background: rgba(16,185,129,0.2); color: #10b981; border-color: #10b981;">Zero-PHI Guard Active</span>
-        </div>
-    </div>
+  <section class="stats" aria-label="Session statistics">
+    <div class="stat"><strong id="evaluations">0</strong><span>Evaluations this session</span></div>
+    <div class="stat"><strong id="warnings">0</strong><span>Warning outcomes</span></div>
+    <div class="stat"><strong id="critical-count">0</strong><span>Critical-flag outcomes</span></div>
+  </section>
 
-    <div class="metrics-bar">
-        <div class="metric-box">
-            <div class="metric-label">System Status</div>
-            <div class="metric-val" style="color: var(--success);" id="m-status">OPTIMAL</div>
+  <div class="columns">
+    <section class="panel" aria-labelledby="form-title">
+      <h2 id="form-title">Evaluation inputs</h2>
+      <form id="audit-form">
+        <div class="field"><label for="task_id">Task identifier</label><input id="task_id" value="TASK-DEMO-01" maxlength="120" required></div>
+        <div class="field"><label for="target_identifier">Target identifier (synthetic only)</label><input id="target_identifier" value="TARGET-DEMO-01" maxlength="120" required></div>
+        <div class="field"><label for="primary_metric">Primary metric (illustrative threshold: 25)</label><input type="number" id="primary_metric" value="29.4" step="any" required></div>
+        <div class="field"><label for="secondary_metric">Secondary metric (illustrative threshold: 12)</label><input type="number" id="secondary_metric" value="14.8" step="any" required></div>
+        <div class="field"><label for="status_descriptor">Status descriptor</label><input id="status_descriptor" value="DISCORDANT_ANOMALY" maxlength="120" required></div>
+        <div class="field"><label for="is_critical" class="check"><input id="is_critical" type="checkbox" checked> Critical escalation flag</label></div>
+        <div class="field"><label for="execution_mode">Execution mode</label>
+          <select id="execution_mode"><option value="browser">Browser preview — no network request</option><option value="api">Server audit — POST /api/audit</option></select>
         </div>
-        <div class="metric-box">
-            <div class="metric-label">Tasks Processed</div>
-            <div class="metric-val" id="m-tasks">142</div>
-        </div>
-        <div class="metric-box">
-            <div class="metric-label">Audit Blocks Signed</div>
-            <div class="metric-val" id="m-audit">142</div>
-        </div>
-        <div class="metric-box">
-            <div class="metric-label">PHI Interceptions</div>
-            <div class="metric-val" style="color: var(--accent);" id="m-phi">0</div>
-        </div>
-    </div>
+        <p class="hint">Browser preview reproduces the existing legacy worker rules in JavaScript. API mode requires the Python FastAPI server and a configured HMAC key. Do not submit real patient identifiers.</p>
+        <div class="actions"><button id="run" type="submit">Evaluate</button><button id="export" type="button" class="secondary" disabled>Export JSON</button></div>
+      </form>
+    </section>
 
-    <div class="grid">
-        <div class="card">
-            <h2>⚙️ Dispatch Distributed Component Audit</h2>
-            <div class="form-group">
-                <label>Task / Sample ID</label>
-                <input type="text" id="task_id" value="TASK-2026-LIVE-01">
-            </div>
-            <div class="form-group">
-                <label>Target Identifier</label>
-                <input type="text" id="target_id" value="SPECIMEN-ALPHA-77">
-            </div>
-            <div class="form-group">
-                <label>Primary Measurement / Value</label>
-                <input type="number" id="primary_metric" value="29.4" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Secondary Metric / Kinetic Index</label>
-                <input type="number" id="secondary_metric" value="14.8" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Status / Phenotype Descriptor</label>
-                <input type="text" id="status_descriptor" value="DISCORDANT_ANOMALY">
-            </div>
-            <div class="form-group">
-                <label><input type="checkbox" id="is_critical" checked> Trigger Emergency / Critical Flag</label>
-            </div>
-            <button class="btn" onclick="runAudit()">Execute Distributed Component Audit</button>
-        </div>
+    <section class="panel" aria-labelledby="result-title">
+      <div class="result-head"><h2 id="result-title">Evaluation result</h2><span id="status" class="status" role="status" aria-live="polite">Ready</span></div>
+      <div class="notice">Only the server mode can produce a real HMAC-signed audit record. Browser preview results are not persisted and are not scientific design recommendations.</div>
+      <pre id="output" aria-label="Evaluation JSON output" tabindex="0">Choose parameters, then select Evaluate.</pre>
+    </section>
+  </div>
+  <footer>Open-source research demonstrator · <a href="https://github.com/abusuraihsakhri/dna-origami-caodna-router" rel="noopener noreferrer">Repository and documentation</a> · No remote model inference in the browser preview.</footer>
+</main>
+<script>
+"use strict";
+const id = function (name) { return document.getElementById(name); };
+let lastResult = null;
+let count = 0;
+let warningCount = 0;
+let criticalCount = 0;
 
-        <div class="card">
-            <h2>📊 Real-Time Consensus Dossier & Audit Log</h2>
-            <div class="terminal" id="outputConsole">// Dna Origami Caodna Router Operations Console Ready
-// Connection established with Air-Gapped Supervisor
-// Cryptographic HMAC-SHA256 audit ledger loaded.
-// Ready for live task payload dispatch...</div>
-        </div>
-    </div>
+function readPayload() {
+  const primary = Number(id("primary_metric").value);
+  const secondary = Number(id("secondary_metric").value);
+  if (!Number.isFinite(primary) || !Number.isFinite(secondary)) {
+    throw new Error("Both numeric metrics must be finite.");
+  }
+  return {
+    task_id: id("task_id").value.trim(),
+    target_identifier: id("target_identifier").value.trim(),
+    primary_metric: primary,
+    secondary_metric: secondary,
+    status_descriptor: id("status_descriptor").value.trim(),
+    is_critical_flag: id("is_critical").checked
+  };
+}
 
-    <script>
-        async function runAudit() {
-            const consoleEl = document.getElementById('outputConsole');
-            consoleEl.innerText = "// Dispatching task across specialized workers...
-// Invoking InvariantQCWorker, SafetyEscalationWorker, ProtocolWorker...";
+function localPreview(p) {
+  const alerts = [];
+  if (p.primary_metric > 25) {
+    alerts.push({origin_worker:"InvariantQCWorker", urgency:"ELEVATED_RISK", summary:"Primary metric exceeded illustrative threshold 25"});
+  }
+  if (p.is_critical_flag || p.secondary_metric > 12) {
+    alerts.push({origin_worker:"SafetyEscalationWorker", urgency:p.is_critical_flag ? "CRITICAL_STAT_PANIC" : "ELEVATED_RISK", summary:"Critical flag or illustrative secondary threshold 12 triggered"});
+  }
+  if (["DISCORDANT","ANOMALY","MUTANT","VIOLATION","FAIL","REJECT"].some(function (word) { return p.status_descriptor.toUpperCase().includes(word); })) {
+    alerts.push({origin_worker:"ProtocolConformanceWorker", urgency:"ELEVATED_RISK", summary:"Descriptor contains a configured anomaly keyword"});
+  }
+  const critical = alerts.some(function (a) { return a.urgency === "CRITICAL_STAT_PANIC"; });
+  const overall = critical ? "CRITICAL_STAT_PANIC" : alerts.length ? "ELEVATED_RISK" : "ROUTINE";
+  return {
+    execution_mode: "browser_preview",
+    task_id: p.task_id,
+    target_identifier: p.target_identifier,
+    overall_urgency: overall,
+    integrity_status: critical ? "RECALIBRATION_REQUIRED" : alerts.length ? "DISCORDANT_ANOMALY" : "VALIDATED_OPTIMAL",
+    total_alerts: alerts.length,
+    critical_alerts_count: alerts.filter(function (a) { return a.urgency === "CRITICAL_STAT_PANIC"; }).length,
+    alerts: alerts,
+    limitations: "Illustrative, unvalidated thresholds. No caDNAno routing, staple design, persistent log, HMAC signature, or scientific validation."
+  };
+}
 
-            const payload = {
-                task_id: document.getElementById('task_id').value,
-                target_identifier: document.getElementById('target_id').value,
-                primary_metric: parseFloat(document.getElementById('primary_metric').value),
-                secondary_metric: parseFloat(document.getElementById('secondary_metric').value),
-                status_descriptor: document.getElementById('status_descriptor').value,
-                is_critical_flag: document.getElementById('is_critical').checked
-            };
+function renderResult(result) {
+  lastResult = result;
+  id("output").textContent = JSON.stringify(result, null, 2);
+  id("export").disabled = false;
+  count += 1;
+  id("evaluations").textContent = String(count);
+  const urgency = String(result.overall_urgency || result.overall_status || "");
+  if (urgency.includes("CRITICAL")) {
+    criticalCount += 1;
+    id("critical-count").textContent = String(criticalCount);
+    id("status").className = "status critical";
+  } else if (urgency.includes("ELEVATED")) {
+    warningCount += 1;
+    id("warnings").textContent = String(warningCount);
+    id("status").className = "status warning";
+  } else {
+    id("status").className = "status";
+  }
+  id("status").textContent = urgency || "Completed";
+}
 
-            try {
-                const res = await fetch('/api/audit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                consoleEl.innerText = JSON.stringify(data, null, 2);
-                document.getElementById('m-tasks').innerText = parseInt(document.getElementById('m-tasks').innerText) + 1;
-                document.getElementById('m-audit').innerText = parseInt(document.getElementById('m-audit').innerText) + 1;
-            } catch (err) {
-                consoleEl.innerText = "// Offline / Simulation Output:\n" + JSON.stringify({
-                    dossier_id: "DOSSIER-SIM-" + Math.floor(Math.random()*10000),
-                    system: "dna-origami-caodna-router",
-                    domain: "Clinical & Cryptographic AI",
-                    task_id: payload.task_id,
-                    overall_urgency: payload.is_critical_flag ? "CRITICAL_STAT_PANIC" : "ELEVATED_RISK",
-                    integrity_status: "DISCORDANT_ANOMALY",
-                    alerts: [
-                        { worker: "InvariantQCWorker", alert: "Primary metric exceeds upper reference bound" },
-                        { worker: "SafetyEscalationWorker", alert: "Critical emergency interlock flag active" }
-                    ],
-                    audit_hash: "HMAC_SHA256_e83f9a72b941d6c381f9"
-                }, null, 2);
-            }
-        }
-    </script>
+id("audit-form").addEventListener("submit", async function (event) {
+  event.preventDefault();
+  const button = id("run");
+  button.disabled = true;
+  id("status").textContent = "Evaluating";
+  try {
+    const payload = readPayload();
+    if (!payload.task_id || !payload.target_identifier || !payload.status_descriptor) {
+      throw new Error("Text fields cannot be empty.");
+    }
+    let result;
+    if (id("execution_mode").value === "api") {
+      const response = await fetch("/api/audit", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)});
+      const data = await response.json().catch(function () { return {}; });
+      if (!response.ok) {
+        throw new Error("Server returned HTTP " + response.status + ": " + JSON.stringify(data.detail || data));
+      }
+      result = data;
+    } else {
+      result = localPreview(payload);
+    }
+    renderResult(result);
+  } catch (err) {
+    id("status").textContent = "Error";
+    id("status").className = "status critical";
+    id("output").textContent = String(err.message || err);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+id("export").addEventListener("click", function () {
+  if (!lastResult) return;
+  const blob = new Blob([JSON.stringify(lastResult, null, 2) + "\n"], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "dna-origami-rule-audit.json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+});
+
+if (location.hostname.endsWith(".github.io")) {
+  id("execution_mode").querySelector('option[value="api"]').disabled = true;
+}
+</script>
 </body>
 </html>
