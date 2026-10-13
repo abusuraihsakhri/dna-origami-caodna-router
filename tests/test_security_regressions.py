@@ -76,3 +76,33 @@ def test_web_ui_and_api_evaluation(monkeypatch):
     assert data["overall_urgency"] == "ELEVATED_RISK"
     assert data["total_alerts"] == 2
     assert len(data["audit_hash"]) == 64
+
+
+def test_dataclass_path_rejects_nonfinite_metrics():
+    from dna_origami_router.models import FrontierPayload
+    with pytest.raises(ValueError, match="finite"):
+        FrontierPayload("T-3", "SYNTHETIC", float("nan"), 1.0, "NOMINAL")
+
+
+def test_batch_skips_identifier_patterns_and_avoids_duplicate_headers(tmp_path):
+    import csv
+    from cli import main
+    source = tmp_path / "records.csv"
+    output = tmp_path / "results.csv"
+    source.write_text(
+        "task_id,target_identifier,primary_metric,secondary_metric,status_descriptor,overall_urgency\\n"
+        "T-1,MRN-123456,2,1,NOMINAL,\\n"
+        "T-2,SYNTHETIC,2,1,NOMINAL,\\n", encoding="utf-8"
+    )
+    assert main(["batch", "-i", str(source), "-o", str(output)]) == 0
+    with output.open(newline="", encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        assert reader.fieldnames.count("overall_urgency") == 1
+        rows = list(reader)
+    assert len(rows) == 1 and rows[0]["task_id"] == "T-2"
+
+
+def test_simulator_rejects_invalid_iteration_count():
+    from simulator import run_simulation
+    with pytest.raises(ValueError, match="positive"):
+        run_simulation(0)
