@@ -1,5 +1,7 @@
 # DNA Origami CAODNA Router
 
+### [Open the Live Application →](https://abusuraihsakhri.github.io/dna-origami-caodna-router/)
+
 A rule-based Python audit and telemetry demonstrator with a browser preview, command-line interfaces and an optional FastAPI service. It evaluates illustrative numeric thresholds and status keywords; it is **not** a caDNAno scaffold-routing engine.
 
 **Scientific scope:** The current code does not generate scaffold paths, crossover arrangements, staple DNA sequences, melting-temperature predictions or experimentally validated DNA-origami designs. Thresholds are demonstration settings, not caDNAno, IUPAC or clinical reference limits. The enrichment modules likewise provide generic threshold assessments rather than molecular simulation.
@@ -48,7 +50,7 @@ The service uses regex-based identifier screening, which is **not** a complete P
 
 ## Docker
 
-Create `.env` locally from `.env.example`, replace the signing-key placeholder with a unique random secret, then run:
+Create `.env` locally from `.env.example`, fill in the empty signing-key value with a unique random secret, then run:
 
 ```bash
 docker compose up --build
@@ -60,7 +62,7 @@ The example Compose configuration binds port 8000 to localhost only. The contain
 
 `python -m pytest -q` tests the two legacy rule interfaces, enrichment demonstration, audit chain, identifier screening and API behavior. GitHub Actions also builds Python distributions and checks embedded browser JavaScript syntax on Python 3.10, 3.11 and 3.12. The implementation uses Python, Pydantic v2, optional FastAPI/Uvicorn, and plain HTML/CSS/JavaScript; no runtime external LLM provider is implemented.
 
-The browser preview targets modern desktop and mobile browsers with JavaScript enabled. It does not require Python or Pyodide. A GitHub Pages workflow publishes the static preview when Pages is enabled; do not infer deployment success from the presence of the workflow alone.
+The browser preview targets modern desktop and mobile browsers with JavaScript enabled. It does not require Python or Pyodide. The GitHub Pages workflow publishes the static browser preview from the `web/` directory; it does not host the Python API.
 
 ## License
 
